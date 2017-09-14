@@ -1,0 +1,39 @@
+---
+- name: Install giscube admin
+  include_role:
+    name: giscube-uwsgi-app
+  vars:
+    APP_DEBUG: False
+    APP_NAME: giscube
+    APP_PATH: "{{ giscube_apps_path }}/giscube"
+    APP_URL: "{{ giscube_admin_url }}"
+    APP_GIT_URL: "https://github.com/giscube/giscube-admin.git"
+    APP_CODE_PATH: /devel/giscube/admin/giscube-admin/
+    APP_REQUIREMENTS: requirements-gdal2.txt
+    APP_DB_NAME: giscube
+    APP_DB_USER: giscube
+    APP_DB_PASSWORD: "{{ giscube_admin_db_password }}"
+    APP_DB_POSTGIS: True
+    APP_ALLOWED_HOSTS: "{{ giscube_admin_host }}"
+    APP_LANGUAGE_CODE: "{{ giscube_admin_language }}"
+    APP_PYTHON3: False
+    APP_UWSGI_OLD: False
+    APP_UWSGI_ONDEMAND: False
+    APP_USE_CAS: False
+    APP_UWSGI_MODULE: giscube/wsgi.py
+    APP_DISABLE_SSL: False
+    APP_EXTRA_VARS: {
+        MEDIA_ROOT: "{{ giscube_apps_path }}/giscube/media",
+        GISCUBE_GIS_SERVER_ENABLED: True,
+        GISCUBE_GIS_SERVER_URL: "http://{{ giscube_admin_host }}/fcgis/giscube_qgisserver",
+        GISCUBE_IMAGE_SERVER_ENABLED: True,
+        VAR_ROOT: "{{ giscube_apps_path }}/giscube/var/",
+        GISCUBE_URL: "https://{{ giscube_admin_host }}{{ giscube_admin_url }}"
+    }
+    UWSGI_EXTRA_VARS: {
+        workers: 1,
+        threads: 8
+    }
+  environment: 
+      CPLUS_INCLUDE_PATH: /usr/include/gdal
+      C_INCLUDE_PATH: /usr/include/gdal
