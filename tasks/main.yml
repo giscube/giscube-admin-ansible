@@ -13,11 +13,13 @@
   vars:
     APP_DEBUG: False
     APP_NAME: giscube
-    APP_PATH: "{{ giscube_apps_path }}/giscube"
-    APP_URL: "{{ giscube_admin_url }}"
+    APP_PATH: "{{ giscube_admin_apps_path }}/giscube"
+    APP_URL: "{{ giscube_admin_app_url }}"
     APP_GIT_URL: "https://github.com/giscube/giscube-admin.git"
-    APP_CODE_PATH: /devel/giscube/admin/giscube-admin/
-    APP_REQUIREMENTS: requirements-gdal2.txt
+    APP_DEPLOY_USER: "{{ giscube_admin_deploy_user | default('www-data') }}"
+    APP_CODE_PATH: "{{ giscube_admin_app_code_path | default('') }}"
+    APP_REQUIREMENTS: "requirements{{ ( ansible_distribution_version | version_compare('17.10', '>=') )|ternary('-gdal2', '')}}.txt"
+    APP_DB_CREATE: False
     APP_DB_NAME: giscube
     APP_DB_USER: giscube
     APP_DB_PASSWORD: "{{ giscube_admin_db_password }}"
@@ -31,17 +33,25 @@
     APP_UWSGI_MODULE: giscube/wsgi.py
     APP_DISABLE_SSL: False
     APP_EXTRA_VARS: {
-        MEDIA_ROOT: "{{ giscube_apps_path }}/giscube/media",
-        GISCUBE_GIS_SERVER_ENABLED: True,
+        MEDIA_ROOT: "{{ giscube_admin_apps_path }}/giscube/media",
+        GISCUBE_GIS_SERVER_ENABLED: "{{ giscube_admin_gis_server_enable }}",
         GISCUBE_GIS_SERVER_URL: "http://{{ giscube_admin_host }}/fcgis/giscube_qgisserver",
-        GISCUBE_IMAGE_SERVER_ENABLED: True,
-        VAR_ROOT: "{{ giscube_apps_path }}/giscube/var/",
-        GISCUBE_URL: "https://{{ giscube_admin_host }}{{ giscube_admin_url }}"
+        GISCUBE_IMAGE_SERVER_ENABLED: "{{ giscube_admin_image_server_enable }}",
+        GISCUBE_GEOPORTAL_ENABLED: "{{ giscube_admin_geoportal_server_enabled | default('false') }}",
+        VAR_ROOT: "{{ giscube_admin_apps_path }}/giscube/var/",
+        GISCUBE_URL: "https://{{ giscube_admin_host }}{{ giscube_admin_app_url }}"
     }
     UWSGI_EXTRA_VARS: {
         workers: 1,
         threads: 8
     }
-  environment: 
+  environment:
       CPLUS_INCLUDE_PATH: /usr/include/gdal
       C_INCLUDE_PATH: /usr/include/gdal
+
+- file:
+    path: "{{ giscube_admin_apps_path }}/giscube/media"
+    state: directory
+    # mode: 0755
+    owner: www-data
+    group: www-data

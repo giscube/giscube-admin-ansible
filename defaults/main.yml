@@ -1,0 +1,8 @@
+---
+
+giscube_admin_apps_path: /data/apps/
+giscube_admin_app_url: /apps/giscube
+giscube_admin_language: en
+giscube_admin_deploy_user: git
+giscube_admin_gis_server_enable: False
+giscube_admin_image_server_enable: False
