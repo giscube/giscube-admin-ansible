@@ -1,4 +1,12 @@
 ---
+
+
+- name: Install libgdal
+  apt: name={{ item }} state=latest
+  with_items:
+    - libgdal-dev
+
+
 - name: Install giscube admin
   include_role:
     name: giscube-uwsgi-app
