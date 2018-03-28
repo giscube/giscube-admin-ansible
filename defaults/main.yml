@@ -1,0 +1,4 @@
+---
+
+
+giscube_admin_media_path: "{{ giscube_apps_path }}/giscube/media"
