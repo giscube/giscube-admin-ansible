@@ -1,0 +1,16 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: abusquets
+  description: Giscube Admin install role
+  company: "Giscube"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.1
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+  categories:
+    - gis
